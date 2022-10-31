@@ -6,9 +6,10 @@ keys_dir=/etc/ssh/keys.d
 mkdir -p ${keys_dir}
 for t in ecdsa ed25519 rsa; do
   file_name="${keys_dir}/ssh_host_${t}_key"
-  if [ ! -f $file_name ]; then
+  if [ ! -f $file_name ] || [ ! -f $file_name".pub" ]; then
     echo "Generating ${t} host key"
-    ssh-keygen -t $t -h -q -N "" -f "$file_name"
+    rm -f "${file_name}" "${file_name}.pub"
+    ssh-keygen -t $t -h -q -N "" -C "" -f "$file_name"
   fi
 done
 
