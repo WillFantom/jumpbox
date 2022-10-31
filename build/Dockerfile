@@ -6,8 +6,6 @@ RUN apk add --no-cache curl \
   openssh-server \
   shadow
 
-RUN adduser -D -H jumpbox
-
 COPY sshd/authorized_keys.sh /etc/ssh/authorized_keys.sh
 RUN chmod 755 /etc/ssh/authorized_keys.sh
 

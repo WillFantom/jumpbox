@@ -15,7 +15,6 @@ AuthorizedKeysFile none
 
 # Lockdown the jumpbox a little
 ForceCommand /sbin/nologin
-DenyUsers jumpbox
 GatewayPorts no
 PermitTTY no
 PermitTunnel no
