@@ -24,7 +24,6 @@ You can add users with associated keys via 2 methods, volume mounting or baking 
   ```bash
    docker run --rm -p 2222:2222 --name jumpbox \ 
     -v "$(pwd)/hostkeys":/etc/ssh/hostkeys.d \
-    -v "$(pwd)/keys":/etc/ssh/keys.d \
     ghcr.io/willfantom/jumpbox
   ```
 
