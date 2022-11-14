@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  jumpbox:
+    container_name: jumpbox
+    image: ghcr.io/willfantom/jumpbox:latest
+    ports:
+      - 2222:2222/tcp
+    volumes:
+      - ./hostkeys:/etc/ssh/hostkeys.d
+      # - ./keys:/etc/ssh/keys.d # include to use mounted keys instead of baked in
