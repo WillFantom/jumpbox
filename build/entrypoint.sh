@@ -28,4 +28,4 @@ envsubst < /etc/ssh/sshd_config_template > /etc/ssh/sshd_config_envsubst
 mv /etc/ssh/sshd_config_envsubst /etc/ssh/sshd_config
 
 echo "Running SSH server..."
-/usr/sbin/sshd -D -f /etc/ssh/sshd_config -e -p 2222
+/usr/sbin/sshd -D -f /etc/ssh/sshd_config -e -p ${SSHD_PORT}
