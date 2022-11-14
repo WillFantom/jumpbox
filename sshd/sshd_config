@@ -4,9 +4,9 @@ ListenAddress 0.0.0.0
 ListenAddress ::
 
 # Use volume mapped hostkeys directory
-HostKey /etc/ssh/keys.d/ssh_host_ecdsa_key
-HostKey /etc/ssh/keys.d/ssh_host_rsa_key
-HostKey /etc/ssh/keys.d/ssh_host_ed25519_key
+HostKey /etc/ssh/hostkeys.d/ssh_host_ecdsa_key
+HostKey /etc/ssh/hostkeys.d/ssh_host_rsa_key
+HostKey /etc/ssh/hostkeys.d/ssh_host_ed25519_key
 
 # Use authorized key manger (akm) to manage key-based auth
 AuthorizedKeysCommand /etc/ssh/authorized_keys.sh

@@ -14,5 +14,6 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 
 COPY sshd/banner /etc/ssh/banner
 COPY sshd/sshd_config /etc/ssh/sshd_config_template
+COPY keys/authorized_keys.json /etc/ssh/keys.d/authorized_keys.json
 
 ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]

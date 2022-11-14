@@ -4,20 +4,12 @@ SSH Jumpbox is a hardened dockerized OpenSSH server that can be used as a bastio
 
 ## Usage
 
-It's simple to start this up, simply run:
-
-```bash
-docker run --rm -p 2222:2222 --name jumpbox \ 
- -v "$(pwd)":/etc/ssh/keys.d \
- ghcr.io/willfantom/jumpbox
-```
-
-To have users with mapped keys, you should create an `authorized_keys.json` file in the mounted directory. The format of the file is as follows:
+You can add users with associated keys via 2 methods, volume mounting or baking them directly into the docker image. Either way, an `authorized_keys.json` file is needed. The format of this file is like so:
 ```json
 {
   "usera": [
     "ka1",
-    "ka2",
+    "ka2"
   ],
   "userb": [
     "kb1",
@@ -25,6 +17,25 @@ To have users with mapped keys, you should create an `authorized_keys.json` file
     "kb3"
   ]
 }
+```
+
+1. To bake them into the docker image, edit the `keys/authorized_keys.json` file and rebuild the image, making sure to use the image that is built by this process.
+
+  ```bash
+   docker run --rm -p 2222:2222 --name jumpbox \ 
+    -v "$(pwd)/hostkeys":/etc/ssh/hostkeys.d \
+    -v "$(pwd)/keys":/etc/ssh/keys.d \
+    ghcr.io/willfantom/jumpbox
+  ```
+
+
+2. To use volume mounting, mount the directory containing your keys file to `/etc/ssh/keys.d`.
+
+```bash
+docker run --rm -p 2222:2222 --name jumpbox \
+ -v "$(pwd)/hostkeys":/etc/ssh/hostkeys.d \
+ -v "$(pwd)/keys":/etc/ssh/keys.d \
+ ghcr.io/willfantom/jumpbox
 ```
 
 

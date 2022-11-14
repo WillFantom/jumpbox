@@ -2,10 +2,10 @@
 set -e
 
 echo "Setting up host keys..."
-keys_dir=/etc/ssh/keys.d
-mkdir -p ${keys_dir}
+hostkeys_dir=/etc/ssh/hostkeys.d
+mkdir -p ${hostkeys_dir}
 for t in ecdsa ed25519 rsa; do
-  file_name="${keys_dir}/ssh_host_${t}_key"
+  file_name="${hostkeys_dir}/ssh_host_${t}_key"
   if [ ! -f $file_name ] || [ ! -f $file_name".pub" ]; then
     echo "Generating ${t} host key"
     rm -f "${file_name}" "${file_name}.pub"
@@ -13,6 +13,9 @@ for t in ecdsa ed25519 rsa; do
   fi
 done
 
+echo "Setting up users..."
+keys_dir=/etc/ssh/keys.d
+mkdir -p ${keys_dir}
 echo "Creating users..."
 jq -r 'keys_unsorted[]' ${keys_dir}/authorized_keys.json | while read u; do
   echo "Creating user ${u}"
