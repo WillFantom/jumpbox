@@ -6,6 +6,9 @@ on:
       - "main"
     tags:
       - "v*"
+    paths-ignore:
+      - "README.md"
+      - "example/**"
 
 jobs:
   docker-release:
