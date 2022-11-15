@@ -11,8 +11,17 @@ on:
       - "example/**"
 
 jobs:
+  validate-json:
+    name: Validate Keys JSON
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Validate JSON
+        run: jq . keys/authorized_keys.json > /dev/null
   docker-release:
     name: Docker Release
+    needs: validate-json
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
