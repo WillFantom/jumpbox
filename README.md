@@ -1,4 +1,4 @@
-# SSH Jumpbox
+# SSH Jumpbox    ![GitHub release (latest SemVer)](https://img.shields.io/github/v/tag/willfantom/jumpbox?display_name=tag&label=%20&sort=semver)
 
 SSH Jumpbox is a hardened dockerized OpenSSH server that can be used as a bastion SSH server. 
 
