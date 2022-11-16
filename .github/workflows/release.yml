@@ -12,16 +12,34 @@ on:
 
 jobs:
   validate-json:
-    name: Validate Keys JSON
+    name: Validate Authorized Keys JSON
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Validate JSON
         run: jq . keys/authorized_keys.json > /dev/null
+  validate-users:
+    name: Validate Users
+    needs: validate-json
+    runs-on: ubuntu-latest
+    env:
+      Regex: ^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Validate Users
+        run: |
+          jq -r 'keys_unsorted[]' keys/authorized_keys.json | while read u; do
+            if [[ ! $u =~ ${Regex} ]]; then
+              echo "Username '"$u"' is not valid"
+              exit 1
+            fi
+          done
   docker-release:
     name: Docker Release
-    needs: validate-json
+    needs:
+      - validate-users
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
