@@ -53,6 +53,10 @@ This jumpbox comes with [Endlessh](https://github.com/skeeto/endlessh) baked in,
 
 To use Endlessh, make sure to map the port in your docker run (e.g. `-p 22:22`).
 
+## Policy
+
+To ensure the SSH server being deployed is hardened as desired, you can use [`ssh-audit`](https://github.com/jtesta/ssh-audit), a tool that can check if an SSH server meets a given configuration security policy. Included is a good starting policy for an SSH server using OpenSSH 9, ensuring the all and only the recommended key types (Host, Kex, Macs) are supported.
+
 
 ## Build
 
