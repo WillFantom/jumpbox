@@ -53,10 +53,20 @@ This jumpbox comes with [Endlessh](https://github.com/skeeto/endlessh) baked in,
 
 To use Endlessh, make sure to map the port in your docker run (e.g. `-p 22:22`).
 
-## Policy
+### Policy
 
 To ensure the SSH server being deployed is hardened as desired, you can use [`ssh-audit`](https://github.com/jtesta/ssh-audit), a tool that can check if an SSH server meets a given configuration security policy. Included is a good starting policy for an SSH server using OpenSSH 9, ensuring the all and only the recommended key types (Host, Kex, Macs) are supported.
 
+## Actions 🚀
+
+The dockerized jumpbox here, along with [`watchtower`](https://containrrr.dev/watchtower/) can create an SSH server managed by GitHub Actions. Provided the SSH users and keys are [baked in](#usage), the Release workflow provided with this repository will:
+ - Validate the `authorized_keys` JSON file
+ - Ensure all provided users are valid usernames
+ - Build the SSH server docker image, including building `endlessh`
+ - Test the server against the given [`policy.txt`](#policy)
+ - Provided all other steps are successful, push an x86 and ARM version to the GitHub container registry
+
+For example, if a new key is added to the `authorized_keys.json` file, the image will be rebuilt and pushed in the actions workflow. Next, the `watchtower` instance on your server will notice the updated image on the next poll interval. Once the image is then pulled, it will replace your currently running server so your changes from GitHub are included. This process will be transparent provided the host keys directory is correctly mapped.
 
 ## Build
 
