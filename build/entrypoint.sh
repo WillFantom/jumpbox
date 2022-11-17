@@ -4,7 +4,7 @@ set -e
 echo "Setting up host keys..."
 hostkeys_dir=/etc/ssh/hostkeys.d
 mkdir -p ${hostkeys_dir}
-for t in ecdsa ed25519 rsa; do
+for t in ed25519 rsa-sha2-256 rsa-sha2-512; do
   file_name="${hostkeys_dir}/ssh_host_${t}_key"
   if [ ! -f $file_name ] || [ ! -f $file_name".pub" ]; then
     echo "Generating ${t} host key"
