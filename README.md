@@ -57,6 +57,15 @@ To use Endlessh, make sure to map the port in your docker run (e.g. `-p 22:22`).
 
 To ensure the SSH server being deployed is hardened as desired, you can use [`ssh-audit`](https://github.com/jtesta/ssh-audit), a tool that can check if an SSH server meets a given configuration security policy. Included is a good starting policy for an SSH server using OpenSSH 9, ensuring all and only the recommended key types (Host, Kex, Macs) are supported.
 
+```
+docker run -it --rm --name ssh-audit --network host \
+  -v "$(pwd)/policy":/policy positronsecurity/ssh-audit \
+  -P /policy/policy.txt \
+  127.0.0.1:2222
+```
+
+> Simply change the `127.0.0.1:2222` to the address and port of the target SSH server
+
 ## Actions 🚀
 
 The dockerized jumpbox here, along with [`watchtower`](https://containrrr.dev/watchtower/) can create an SSH server managed by GitHub Actions. Provided the SSH users and keys are [baked in](#usage), the Release workflow provided with this repository will:
