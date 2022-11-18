@@ -1,6 +1,6 @@
 # SSH Jumpbox    ![GitHub release (latest SemVer)](https://img.shields.io/github/v/tag/willfantom/jumpbox?display_name=tag&label=%20&sort=semver)  ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/WillFantom/jumpbox/Release?label=%20&logo=github)
 
-SSH Jumpbox is a hardened dockerized OpenSSH server that can be used as a bastion SSH server. 
+SSH Jumpbox is a hardened dockerized OpenSSH server that can be used as a multi-user bastion SSH server. Whilst other great tools such as [`ssh-portal`]() exist, they can be overcomplicated for many use cases, leading to a more complex security auditing process. This jumpbox is somewhat simple, and importantly uses a vanilla OpenSSH server rather than a custom-built server.
 
 ## Usage
 
@@ -55,7 +55,7 @@ To use Endlessh, make sure to map the port in your docker run (e.g. `-p 22:22`).
 
 ### Policy
 
-To ensure the SSH server being deployed is hardened as desired, you can use [`ssh-audit`](https://github.com/jtesta/ssh-audit), a tool that can check if an SSH server meets a given configuration security policy. Included is a good starting policy for an SSH server using OpenSSH 9, ensuring the all and only the recommended key types (Host, Kex, Macs) are supported.
+To ensure the SSH server being deployed is hardened as desired, you can use [`ssh-audit`](https://github.com/jtesta/ssh-audit), a tool that can check if an SSH server meets a given configuration security policy. Included is a good starting policy for an SSH server using OpenSSH 9, ensuring all and only the recommended key types (Host, Kex, Macs) are supported.
 
 ## Actions 🚀
 
@@ -67,6 +67,8 @@ The dockerized jumpbox here, along with [`watchtower`](https://containrrr.dev/wa
  - Provided all other steps are successful, push an x86 and ARM version to the GitHub container registry
 
 For example, if a new key is added to the `authorized_keys.json` file, the image will be rebuilt and pushed in the actions workflow. Next, the `watchtower` instance on your server will notice the updated image on the next poll interval. Once the image is then pulled, it will replace your currently running server so your changes from GitHub are included. This process will be transparent provided the host keys directory is correctly mapped.
+
+Additionally, this can be leveraged for multi-user setups, since anybody with write access to the repository can manage the users and keys.
 
 ## Build
 
