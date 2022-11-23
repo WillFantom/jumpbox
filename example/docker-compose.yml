@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  jumpbox:
+    container_name: jumpbox
+    image: ghcr.io/willfantom/jumpbox:latest
+    ports:
+      - 22:22/tcp
+      - 2222:2222/tcp
+    volumes:
+      - ./hostkeys:/etc/ssh/hostkeys.d
+      # - ./keys:/etc/ssh/keys.d # Include to use mounted keys rather than the ones baked in
+    environment:
+      - SSHD_PORT=2222
+      - ENDLESSH_PORT=22
+    labels:
+      - "com.centurylinklabs.watchtower.scope=sshjumpbox"
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  # Required for auto-pulling updated images from github
+  watchtower:
+    container_name: watchtower
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 30 --scope sshjumpbox
+    labels:
+      - "com.centurylinklabs.watchtower.scope=sshjumpbox"
+      - "com.centurylinklabs.watchtower.enable=false"
