@@ -1,0 +1,42 @@
+name: Audit
+
+on:
+  workflow_call:
+  push:
+    branches:
+      - "main"
+    paths:
+      - "policy/policy.txt"
+
+jobs:
+  audit:
+    name: Audit Server
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Build Test Container
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: build/Dockerfile
+          push: false
+          load: true
+          tags: jumpbox:policy-test
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Run Test Container
+        run: |
+          docker run --rm -d -e SSHD_PORT=2222 -p 2222:2222 --name jumpbox jumpbox:policy-test
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - name: Check Against Policy
+        run: |
+          pip install ssh-audit
+          ssh-audit -P policy/policy.txt 127.0.0.1:2222
