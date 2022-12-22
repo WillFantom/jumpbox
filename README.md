@@ -1,4 +1,4 @@
-# SSH Jumpbox    ![GitHub release (latest SemVer)](https://img.shields.io/github/v/tag/willfantom/jumpbox?display_name=tag&label=%20&sort=semver)  ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/WillFantom/jumpbox/Release?label=%20&logo=github)
+# SSH Jumpbox    ![GitHub release (latest SemVer)](https://img.shields.io/github/v/tag/willfantom/jumpbox?display_name=tag&label=%20&sort=semver)  ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/willfantom/jumpbox/release.yml?label=%20&logo=github)
 
 SSH Jumpbox is a hardened dockerized OpenSSH server that can be used as a multi-user bastion SSH server. Whilst other great tools such as [`sshportal`](https://github.com/moul/sshportal) exist, they can be overcomplicated for many use cases, leading to a more complex security auditing process. This jumpbox is somewhat simple, and importantly uses a vanilla OpenSSH server rather than a custom-built server.
 
