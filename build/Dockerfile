@@ -25,6 +25,7 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 COPY sshd/banner /etc/ssh/banner
 COPY sshd/sshd_config /etc/ssh/sshd_config_template
 COPY keys/authorized_keys.json /etc/ssh/keys.d/authorized_keys.json
+RUN chown nobody:nogroup /etc/ssh/keys.d/authorized_keys.json
 
 ENV SSHD_PORT 2222
 ENV ENDLESSH_PORT 22
