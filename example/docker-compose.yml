@@ -4,26 +4,46 @@ services:
   jumpbox:
     container_name: jumpbox
     image: ghcr.io/willfantom/jumpbox:latest
+    restart: unless-stopped
     ports:
-      - 22:22/tcp
+      - ${ENDLESSH_PORT}:${ENDLESSH_PORT}/tcp
       - ${SSHD_PORT}:${SSHD_PORT}/tcp
     volumes:
       - ./hostkeys:/etc/ssh/hostkeys.d
+      - ./logs:/var/log:rw
       # - ./keys:/etc/ssh/keys.d # Include to use mounted keys rather than the ones baked in
     environment:
+      - TZ=${TZ}
       - SSHD_PORT=${SSHD_PORT}
-      - ENDLESSH_PORT=22
+      - ENDLESSH_PORT=${ENDLESSH_PORT}
     labels:
       - "com.centurylinklabs.watchtower.scope=sshjumpbox"
       - "com.centurylinklabs.watchtower.enable=true"
 
-  # Required for auto-pulling updated images from github
   watchtower:
-    container_name: watchtower
+    container_name: jumpbox_watchtower
     image: containrrr/watchtower
+    restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     command: --interval 30 --scope sshjumpbox
     labels:
       - "com.centurylinklabs.watchtower.scope=sshjumpbox"
       - "com.centurylinklabs.watchtower.enable=false"
+
+  fail2ban:
+    container_name: jumpbox_fail2ban
+    image: ghcr.io/willfantom/jumpbox-fail2ban:latest
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    network_mode: host
+    volumes:
+      - ./logs:/var/log:rw
+    environment:
+      - TZ=${TZ}
+      - SSHD_PORT=${SSHD_PORT}
+    labels:
+      - "com.centurylinklabs.watchtower.scope=sshjumpbox"
+      - "com.centurylinklabs.watchtower.enable=true"
