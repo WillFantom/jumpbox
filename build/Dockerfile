@@ -19,6 +19,8 @@ RUN apk add --no-cache --progress --quiet \
   shadow \
   tzdata
 
+RUN sed -i '/imklog/s/^/#/' /etc/rsyslog.conf
+
 COPY --from=endlessh-builder /src/endlessh /usr/local/bin/endlessh
 
 COPY sshd/authorized_keys.sh /etc/ssh/authorized_keys.sh
