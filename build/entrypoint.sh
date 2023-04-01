@@ -6,6 +6,11 @@ if [[ "${TRACE-0}" == "1" ]]; then
   set -o xtrace
 fi
 
+echo "Setting timezone..."
+TZ=${TZ:-UTC}
+ln -snf "/usr/share/zoneinfo/${TZ}" /etc/localtime
+echo "${TZ}" > /etc/timezone
+
 echo "Setting up host keys..."
 hostkeys_dir=/etc/ssh/hostkeys.d
 mkdir -p ${hostkeys_dir}
@@ -32,10 +37,13 @@ echo "Creating sshd configuration..."
 envsubst < /etc/ssh/sshd_config_template > /etc/ssh/sshd_config_envsubst
 mv /etc/ssh/sshd_config_envsubst /etc/ssh/sshd_config
 
-if [[ ${ENDLESSH_PORT} -ne "0" ]]; then
+echo  "Running syslog..."
+syslog-ng
+
+if [[ "${ENDLESSH_PORT}" -ne "0" ]]; then
   echo "Running endlessh server..."
   /usr/local/bin/endlessh -p "${ENDLESSH_PORT}" -v &
 fi
 
 echo "Running SSH server..."
-/usr/sbin/sshd -D -f /etc/ssh/sshd_config -e -p "${SSHD_PORT}"
+/usr/sbin/sshd -D -f /etc/ssh/sshd_config -p "${SSHD_PORT}"
