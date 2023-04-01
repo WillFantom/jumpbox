@@ -35,5 +35,4 @@ PrintMotd no
 Banner /etc/ssh/banner
 
 # Use Syslog
-SyslogFacility  DAEMON 
-LogLevel        DEBUG3
+SyslogFacility  AUTH
