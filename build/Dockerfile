@@ -15,8 +15,8 @@ RUN apk add --no-cache --progress --quiet \
   gettext \
   jq \
   openssh-server \
+  rsyslog \
   shadow \
-  syslog-ng \
   tzdata
 
 COPY --from=endlessh-builder /src/endlessh /usr/local/bin/endlessh

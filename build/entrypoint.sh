@@ -38,7 +38,7 @@ envsubst < /etc/ssh/sshd_config_template > /etc/ssh/sshd_config_envsubst
 mv /etc/ssh/sshd_config_envsubst /etc/ssh/sshd_config
 
 echo  "Running syslog..."
-syslog-ng
+rsyslogd
 
 if [[ "${ENDLESSH_PORT}" -ne "0" ]]; then
   echo "Running endlessh server..."
