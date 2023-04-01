@@ -31,7 +31,7 @@ jobs:
           cache-to: type=gha,mode=max
       - name: Run Test Container
         run: |
-          docker run --rm -d -e SSHD_PORT=2222 -p 2222:2222 --name jumpbox jumpbox:policy-test
+          docker run --rm -d -e SSHD_PORT=2222 -p 2222:2222 --name jumpbox jumpbox:policy-test && sleep 10
       - name: Setup Python
         uses: actions/setup-python@v4
         with:

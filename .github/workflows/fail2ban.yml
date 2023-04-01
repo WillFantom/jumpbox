@@ -1,56 +1,16 @@
-name: Release Jumpbox
+name: Release Fail2Ban
 
 on:
   workflow_dispatch:
   schedule:
     - cron: "0 2 1 * *"
   push:
-    branches:
-      - "main"
     tags:
       - "v*"
-    paths-ignore:
-      - "README.md"
-      - "example/**"
-      - "policy/**"
 
 jobs:
-  validate-json:
-    name: Validate Authorized Keys JSON
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Validate JSON
-        run: jq . keys/authorized_keys.json > /dev/null
-  validate-users:
-    name: Validate Users
-    needs: validate-json
-    runs-on: ubuntu-latest
-    env:
-      Regex: ^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Validate Users
-        run: |
-          jq -r 'keys_unsorted[]' keys/authorized_keys.json | while read u; do
-            if [[ ! $u =~ ${Regex} ]]; then
-              echo "Username '"$u"' is not valid"
-              exit 1
-            fi
-          done
-  audit:
-    uses: ./.github/workflows/audit.yml
-    needs:
-      - validate-json
-      - validate-users
   docker-release:
-    name: Docker Release
-    needs:
-      - validate-json
-      - validate-users
-      - audit
+    name: Fail2Ban Docker Release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -70,7 +30,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            ghcr.io/${{ github.repository_owner }}/jumpbox
+            ghcr.io/${{ github.repository_owner }}/jumpbox-fail2ban
           flavor: |
             latest=false
             prefix=
@@ -82,10 +42,10 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
       - name: Build and Push Container
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v3
         with:
           context: .
-          file: build/Dockerfile
+          file: build/fail2ban.Dockerfile
           push: true
           platforms: linux/amd64,linux/386,linux/arm64,linux/arm/v6,linux/arm/v7
           tags: ${{ steps.metadata.outputs.tags }}
