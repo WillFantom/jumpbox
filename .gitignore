@@ -1,2 +1,3 @@
 example/*
-!example/authorized_keys.json
+!example/.env
+!example/docker-compose.yml

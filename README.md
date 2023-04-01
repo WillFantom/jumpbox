@@ -108,7 +108,7 @@ This is perhaps the best way to use Jumpbox, especially if it is for an organiza
 
 ## Configuration
 
-- **SSH Server**: Configure the SSH server by modifying the [`sshd_config`](sshd/sshd_config) file. Included is a sensible default for a Jumpbox host as of November 2022. To modify the internal port used for the SSH server, make sure to use the `SSHD_PORT` environment variable.
+- **SSH Server**: Configure the SSH server by modifying the [`sshd_config`](sshd/sshd_config) file. Included is a sensible default for a Jumpbox host as of November 2022. To modify the internal port used for the SSH server, make sure to use the `SSHD_PORT` environment variable. Also, always ensure that the internal SSH server port is the same as the exposed port. Having a port mapping where the internal and external ports are different will break some features. See the example docker-compose file for more on how to do this easily.
 
 - **Users & Keys**: Regardless of if you are using baked in keys or mounted, the format anc common issues are the same. See [here](./example/keys/README.md) for more.
 

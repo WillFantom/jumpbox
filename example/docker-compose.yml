@@ -6,12 +6,12 @@ services:
     image: ghcr.io/willfantom/jumpbox:latest
     ports:
       - 22:22/tcp
-      - 2222:2222/tcp
+      - ${SSHD_PORT}:${SSHD_PORT}/tcp
     volumes:
       - ./hostkeys:/etc/ssh/hostkeys.d
       # - ./keys:/etc/ssh/keys.d # Include to use mounted keys rather than the ones baked in
     environment:
-      - SSHD_PORT=2222
+      - SSHD_PORT=${SSHD_PORT}
       - ENDLESSH_PORT=22
     labels:
       - "com.centurylinklabs.watchtower.scope=sshjumpbox"
