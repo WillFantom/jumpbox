@@ -20,6 +20,7 @@ for t in ed25519 rsa-sha2-256 rsa-sha2-512; do
     echo "Generating ${t} host key"
     rm -f "${file_name}" "${file_name}.pub"
     ssh-keygen -t $t -h -q -N "" -C "" -f "$file_name"
+    chmod 0600 "${file_name}"
   fi
 done
 
