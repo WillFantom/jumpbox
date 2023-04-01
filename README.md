@@ -19,6 +19,8 @@ Whilst the objective of this project was to keep things simple (a large motivato
 
 - **Policy**: To ensure the SSH server being deployed is hardened as desired, you can use [`ssh-audit`](https://github.com/jtesta/ssh-audit), a tool that can check if an SSH server meets a given configuration security policy. Included is a good starting policy for an SSH server using OpenSSH 9, ensuring all and only the recommended key types (Host, Kex, Macs) are supported.
 
+- **Fail2Ban**: Writes logs to a file via a syslog server, in turn allowing [Fail2Ban](https://www.fail2ban.org/wiki/index.php/Main_Page) to block malicious connections. As Fail2Ban is expected to exist outside the jumpbox container (either on the host system or in a different container), the jumpbox itself needs no extra permissions to support this. See the example [docker-compose](./example/docker-compose.yml) for a way to set this up.
+
 - **Actions**: The dockerized jumpbox here, along with [`watchtower`](https://containrrr.dev/watchtower/) can create an SSH server managed by GitHub Actions. Provided the SSH users and keys are [baked in](#full-usage), the Release workflow provided with this repository will:
    - Validate the `authorized_keys` JSON file
    - Ensure all provided users are valid usernames
