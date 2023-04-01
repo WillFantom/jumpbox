@@ -10,8 +10,10 @@ RUN apk add --no-cache --progress --quiet \
   nftables \
   tzdata
 
-RUN rm -r /etc/fail2ban/jail.d/*
-COPY fail2ban/sshd.conf /etc/fail2ban/jail.d/sshd.conf
+RUN rm -r /etc/fail2ban/jail.d/* && \
+  rm -rf /etc/fail2ban/action.d/nftables-common.local
+COPY fail2ban/jail.d/* /etc/fail2ban/jail.d/
+COPY fail2ban/action.d/nftables-common.local /etc/fail2ban/action.d/nftables-common.local
 
 COPY build/fail2ban.entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
