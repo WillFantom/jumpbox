@@ -72,11 +72,11 @@ jobs:
           images: |
             ghcr.io/${{ github.repository_owner }}/jumpbox
           flavor: |
-            latest=false
+            latest=auto
             prefix=
             suffix=
           tags: |
-            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=latest-unstable,enable={{is_default_branch}}
             type=ref,event=branch
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
