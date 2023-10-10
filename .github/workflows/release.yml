@@ -16,13 +16,13 @@ on:
 
 jobs:
   validate-json:
-    name: Validate Authorized Keys JSON
+    name: Validate Auth JSON
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Validate JSON
-        run: jq . keys/authorized_keys.json > /dev/null
+        run: jq . keys/auth.json > /dev/null
   validate-users:
     name: Validate Users
     needs: validate-json
@@ -34,7 +34,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Validate Users
         run: |
-          jq -r 'keys_unsorted[]' keys/authorized_keys.json | while read u; do
+          jq -r -c '.users[]?.username?' keys/auth.json | while read u; do
             if [[ ! $u =~ ${Regex} ]]; then
               echo "Username '"$u"' is not valid"
               exit 1

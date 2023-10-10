@@ -28,7 +28,7 @@ echo "Setting up users..."
 keys_dir=/etc/ssh/keys.d
 mkdir -p ${keys_dir}
 echo "Creating users..."
-jq -r 'keys_unsorted[]' ${keys_dir}/authorized_keys.json | while read -r u; do
+jq -r -c '.users[]?.username?' ${keys_dir}/auth.json | while read -r u; do
   echo "Creating user ${u}"
   adduser -D -H -s /sbin/nologin "${u}"
   sed -i s/"${u}:!"/"${u}:*"/g /etc/shadow

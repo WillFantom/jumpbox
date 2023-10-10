@@ -40,9 +40,9 @@ This method gets you started a fast as possible with Jumpbox, using the SSH serv
 
 > Although you can get going with Jumpbox quickly if you already have Docker installed, Jumpbox can be more beneficial if you follow the [full usage](#full-usage).
 
-1. Create an `authorized_keys.json` file and add your username -> keys mappings. For more on this see [here](example/keys/README.md).
+1. Create an `auth.json` file and add your username -> keys mappings etc. For more on this see [here](./keys/AUTH.md).
 
-2. Run the container, making sure the new `authorized_keys.json` is in the `"$(pwd)/keys"` directory (if copying the below command exactly).
+2. Run the container, making sure the new `auth.json` is in the `"$(pwd)/keys"` directory (if copying the below command exactly).
    ```
    docker run --rm -p 2222:2222 --name jumpbox \
      -v "$(pwd)/hostkeys":/etc/ssh/hostkeys.d \
@@ -60,7 +60,7 @@ This method is a more production friendly approach. This also allows you to modi
 
 1. Clone this repository or your fork to your Jumpbox server host.
 
-2. Modify the already existing `authorized_keys.json` found in [`./keys`](./keys/) using the format as outlined [here](example/keys/README.md).
+2. Modify the already existing `auth.json` found in [`./keys`](./keys/) using the format as outlined [here](./keys/AUTH.md).
 
 3. Build the Jumpbox container image by running the following command from the repository root.
    ```
@@ -91,7 +91,7 @@ This is perhaps the best way to use Jumpbox, especially if it is for an organiza
 
 1. Fork this repository to your (or your orgs) GitHub account.
 
-2. Add your users and associated keys to the baked in [`authorized_keys.json`](./keys/authorized_keys.json) file. This can be done easily in the GitHub web editor/GitHub Codespaces.
+2. Add your users and associated keys to the baked in [`auth.json`](./keys/auth.json) file. This can be done easily in the GitHub web editor/GitHub Codespaces.
 
 3. Commit (and push/save) your changes to the main branch. Provided actions is enabled for your repository, the pipeline will now:
      - Check for common errors in the `authorized_keys` file
@@ -112,7 +112,7 @@ This is perhaps the best way to use Jumpbox, especially if it is for an organiza
 
 - **SSH Server**: Configure the SSH server by modifying the [`sshd_config`](sshd/sshd_config) file. Included is a sensible default for a Jumpbox host as of November 2022. To modify the internal port used for the SSH server, make sure to use the `SSHD_PORT` environment variable. Also, always ensure that the internal SSH server port is the same as the exposed port. Having a port mapping where the internal and external ports are different will break some features. See the example docker-compose file for more on how to do this easily.
 
-- **Users & Keys**: Regardless of if you are using baked in keys or mounted, the format anc common issues are the same. See [here](./example/keys/README.md) for more.
+- **Users & Keys**: Regardless of if you are using baked in keys or mounted, the format anc common issues are the same. See [here](./keys/AUTH.md) for more.
 
 - **Banner**: To change the banner used by the Jumpbox, add your desired banner to the [`banner`](./sshd/banner) file. Tip: `figlet` can be a super useful tool for creating terminal friendly banner text.
 
