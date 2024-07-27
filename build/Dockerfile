@@ -1,4 +1,4 @@
-FROM alpine:3.18 as endlessh-builder
+FROM alpine:3.20 as endlessh-builder
 
 RUN apk add --no-cache build-base git
 WORKDIR /src
@@ -7,7 +7,7 @@ RUN git clone -b ${ENDLESSH_VERSION} https://github.com/skeeto/endlessh .
 RUN make
 
 
-FROM alpine:3.18
+FROM alpine:3.20
 
 RUN apk add --no-cache --progress --quiet \
   bash \
