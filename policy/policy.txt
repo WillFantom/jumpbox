@@ -19,7 +19,7 @@ dh_modulus_size_diffie-hellman-group-exchange-sha256 = 4096
 host keys = ssh-ed25519, rsa-sha2-512, rsa-sha2-256, rsa-sha2-512, rsa-sha2-256
 
 # The key exchange algorithms that must match exactly (order matters).
-key exchanges = curve25519-sha256, curve25519-sha256@libssh.org, diffie-hellman-group-exchange-sha256, diffie-hellman-group16-sha512, diffie-hellman-group18-sha512, diffie-hellman-group14-sha256, kex-strict-s-v00@openssh.com
+key exchanges = curve25519-sha256, curve25519-sha256@libssh.org, diffie-hellman-group-exchange-sha256, diffie-hellman-group16-sha512, diffie-hellman-group18-sha512, diffie-hellman-group14-sha256, ext-info-s, kex-strict-s-v00@openssh.com
 
 # The ciphers that must match exactly (order matters).
 ciphers = chacha20-poly1305@openssh.com, aes128-ctr, aes192-ctr, aes256-ctr, aes128-gcm@openssh.com, aes256-gcm@openssh.com
