@@ -33,7 +33,7 @@ jobs:
         run: |
           docker run --rm -d -e SSHD_PORT=2222 -p 2222:2222 --name jumpbox jumpbox:policy-test && sleep 10
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
       - name: Check Against Policy
