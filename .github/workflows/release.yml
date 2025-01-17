@@ -81,6 +81,10 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
+      - name: Repository Owner to Lowercase
+        id: lowercase-repo-owner
+        run: |
+          echo "::set-output name=owner_lower::${GITHUB_REPOSITORY_OWNER,,}"
       - name: Build and Push Container
         uses: docker/build-push-action@v6
         with:
@@ -90,5 +94,5 @@ jobs:
           platforms: linux/amd64,linux/386,linux/arm64,linux/arm/v6,linux/arm/v7
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=registry,ref=ghcr.io/${{ steps.lowercase-repo-owner.outputs.owner_lower }}/jumpbox:buildcache
+          cache-to: type=registry,ref=ghcr.io/${{ steps.lowercase-repo-owner.outputs.owner_lower }}/jumpbox:buildcache,mode=max
