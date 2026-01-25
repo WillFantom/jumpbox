@@ -29,9 +29,14 @@ keys_dir=/etc/ssh/keys.d
 mkdir -p ${keys_dir}
 echo "Creating users..."
 jq -r -c '.users[]?.username?' ${keys_dir}/auth.json | while read -r u; do
-  echo "Creating user ${u}"
-  adduser -D -H -s /sbin/nologin "${u}"
-  sed -i s/"${u}:!"/"${u}:*"/g /etc/shadow
+   if id "${u}" 2>/dev/null;
+   then
+      echo "Existing user ${u}"
+   else
+      echo "Creating user ${u}"
+      adduser -D -H -s /sbin/nologin "${u}"
+      sed -i s/"${u}:!"/"${u}:*"/g /etc/shadow
+   fi
 done
 
 echo "Creating sshd configuration..."
