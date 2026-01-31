@@ -1,5 +1,5 @@
-example/*
+/example/*
 !example/.env
 !example/docker-compose.yml
-/hostkeys
-/logs
+/hostkeys/
+/logs/
