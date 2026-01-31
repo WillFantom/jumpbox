@@ -1,5 +1,5 @@
 name = "SSH Jumpbox"
-version = 1
+version = 2
 
 # The banner that must match exactly.  Commented out to ignore banners, since minor variability in the banner is sometimes normal.
 # banner = "SSH-2.0-OpenSSH_9.0"
@@ -19,10 +19,10 @@ dh_modulus_size_diffie-hellman-group-exchange-sha256 = 4096
 host keys = ssh-ed25519, rsa-sha2-512, rsa-sha2-256, rsa-sha2-512, rsa-sha2-256
 
 # The key exchange algorithms that must match exactly (order matters).
-key exchanges = curve25519-sha256, curve25519-sha256@libssh.org, diffie-hellman-group-exchange-sha256, diffie-hellman-group16-sha512, diffie-hellman-group18-sha512, diffie-hellman-group14-sha256, ext-info-s, kex-strict-s-v00@openssh.com
+key exchanges = curve25519-sha256, curve25519-sha256@libssh.org, diffie-hellman-group-exchange-sha256, diffie-hellman-group16-sha512, diffie-hellman-group18-sha512, ext-info-s, kex-strict-s-v00@openssh.com
 
 # The ciphers that must match exactly (order matters).
-ciphers = chacha20-poly1305@openssh.com, aes128-ctr, aes192-ctr, aes256-ctr, aes128-gcm@openssh.com, aes256-gcm@openssh.com
+ciphers = aes256-gcm@openssh.com, aes128-gcm@openssh.com, aes256-ctr, aes192-ctr, aes128-ctr
 
 # The MACs that must match exactly (order matters).
-macs = hmac-sha2-256-etm@openssh.com, hmac-sha2-512-etm@openssh.com, umac-128-etm@openssh.com
+macs = hmac-sha2-512, hmac-sha2-256
