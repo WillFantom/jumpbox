@@ -30,7 +30,7 @@ jobs:
         run: jq . keys/auth.json > /dev/null
       - name: Valid Usernames Check
         run: |
-          jq -r -c '.users[]?.username?' keys/auth.json | while read u; do
+          jq -r -c '.users[]?.username?' keys/auth.json | while IFS= read -r u; do
             if [[ ! $u =~ ${USER_REGEX} ]]; then
               echo "Username '"$u"' is not valid"
               exit 1

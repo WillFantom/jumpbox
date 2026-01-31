@@ -59,7 +59,7 @@ GITHUB_REQUIRED_ORG=$( (echo "${SETTINGS_JSON}" | jq -r -c '.github_required_org
 ## Dump the raw keys for a user to stdout if given the user json as the first positional arg
 function dump_keys_raw() {
   user_keys=$(echo "${1}" | jq -r -c .keys?.[]?)
-  echo "$user_keys" | while read -r k; do
+  printf '%s\n' "$user_keys" | while IFS= read -r k; do
     echo "$k"
   done
 }
@@ -79,7 +79,7 @@ function dump_keys_github() {
     fi
   fi 
   github_keys=$( (curl -fsSL "https://github.com/${github_username}.keys" ) 2>/dev/null )
-  echo "$github_keys" | while read -r k; do
+  printf '%s\n' "$github_keys" | while IFS= read -r k; do
     echo "$k"
   done
 }

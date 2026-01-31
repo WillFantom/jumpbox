@@ -28,7 +28,7 @@ echo "Setting up users..."
 keys_dir=/etc/ssh/keys.d
 mkdir -p ${keys_dir}
 echo "Creating users..."
-jq -r -c '.users[]?.username?' ${keys_dir}/auth.json | while read -r u; do
+jq -r -c '.users[]?.username?' ${keys_dir}/auth.json | while IFS= read -r u; do
   if id "${u}" 2>/dev/null;
   then
     echo "Existing user ${u}"
