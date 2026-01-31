@@ -44,6 +44,5 @@ jobs:
       - name: Release Fail2Ban Docker Image
         uses: ./.github/actions/release-docker
         with:
-          image_label: "${{ github.repository }}"
+          image_label: "${{ github.repository }}-fail2ban"
           dockerfile_path: "build/fail2ban.Dockerfile"
-          tag_suffix: "-fail2ban"

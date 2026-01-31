@@ -8,10 +8,6 @@ inputs:
     description: "The path to the Dockerfile to build."
     required: false
     default: "build/Dockerfile"
-  tag_suffix:
-    description: "The suffix to append to the Docker image tag."
-    required: false
-    default: ""
 runs:
   using: "composite"
   steps:
@@ -39,7 +35,7 @@ runs:
         flavor: |
           latest=auto
           prefix=
-          suffix=${{ inputs.tag_suffix }}
+          suffix=
         tags: |
           type=ref,event=pr
           type=ref,event=branch
@@ -55,5 +51,5 @@ runs:
         platforms: linux/amd64,linux/386,linux/arm64,linux/arm/v6,linux/arm/v7
         tags: ${{ steps.metadata.outputs.tags }}
         labels: ${{ steps.metadata.outputs.labels }}
-        cache-from: type=registry,ref=ghcr.io/${{ env.IMAGE_LABEL }}:buildcache${{ inputs.tag_suffix }}
-        cache-to: type=registry,ref=ghcr.io/${{ env.IMAGE_LABEL }}:buildcache${{ inputs.tag_suffix }},mode=max
+        cache-from: type=registry,ref=ghcr.io/${{ env.IMAGE_LABEL }}:buildcache
+        cache-to: type=registry,ref=ghcr.io/${{ env.IMAGE_LABEL }}:buildcache,mode=max

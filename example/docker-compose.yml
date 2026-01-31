@@ -33,7 +33,7 @@ services:
 
   fail2ban:
     container_name: jumpbox_fail2ban
-    image: ghcr.io/willfantom/jumpbox:latest-fail2ban
+    image: ghcr.io/willfantom/jumpbox-fail2ban:latest
     restart: unless-stopped
     cap_add:
       - NET_ADMIN
