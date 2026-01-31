@@ -27,11 +27,15 @@ runs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Lowercase tag values
+      shell: bash
+      run: |
+        echo IMAGE_LABEL=$(echo ${{ inputs.image_label }} | tr '[:upper:]' '[:lower:]') >> $GITHUB_ENV
     - name: Container Metadata
       id: metadata
       uses: docker/metadata-action@v5
       with:
-        images: ghcr.io/${{ inputs.image_label }}
+        images: ghcr.io/${{ env.IMAGE_LABEL }}
         flavor: |
           latest=auto
           prefix=
@@ -51,5 +55,5 @@ runs:
         platforms: linux/amd64,linux/386,linux/arm64,linux/arm/v6,linux/arm/v7
         tags: ${{ steps.metadata.outputs.tags }}
         labels: ${{ steps.metadata.outputs.labels }}
-        cache-from: type=registry,ref=ghcr.io/${{ inputs.image_label }}:buildcache${{ inputs.tag_suffix }}
-        cache-to: type=registry,ref=ghcr.io/${{ inputs.image_label }}:buildcache${{ inputs.tag_suffix }},mode=max
+        cache-from: type=registry,ref=ghcr.io/${{ env.IMAGE_LABEL }}:buildcache${{ inputs.tag_suffix }}
+        cache-to: type=registry,ref=ghcr.io/${{ env.IMAGE_LABEL }}:buildcache${{ inputs.tag_suffix }},mode=max
