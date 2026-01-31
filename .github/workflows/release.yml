@@ -22,8 +22,10 @@ jobs:
       contents: read
       packages: write
     steps:
+      - name: Checkout
+        uses: actions/checkout@v6
       - name: Release Jumpbox Docker Image
-        uses: ./.github/actions/release-docker.yml
+        uses: ./.github/actions/release-docker
         with:
           image_label: "${{ github.repository }}"
           dockerfile_path: "build/Dockerfile"
@@ -37,8 +39,10 @@ jobs:
       contents: read
       packages: write
     steps:
+      - name: Checkout
+        uses: actions/checkout@v6
       - name: Release Fail2Ban Docker Image
-        uses: ./.github/actions/release-docker.yml
+        uses: ./.github/actions/release-docker
         with:
           image_label: "${{ github.repository }}"
           dockerfile_path: "build/fail2ban.Dockerfile"
