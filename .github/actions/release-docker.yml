@@ -1,0 +1,55 @@
+name: "Release Docker"
+description: "Release an asset as a Docker container to GHCR"
+inputs:
+  image_label:
+    description: "The Docker image label to publish as. Should not include a tag or registry."
+    required: true
+  dockerfile_path:
+    description: "The path to the Dockerfile to build."
+    required: false
+    default: "build/Dockerfile"
+  tag_suffix:
+    description: "The suffix to append to the Docker image tag."
+    required: false
+    default: ""
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+    - name: Setup QEMU
+      uses: docker/setup-qemu-action@v3
+    - name: Setup Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Container Metadata
+      id: metadata
+      uses: docker/metadata-action@v5
+      with:
+        images: ghcr.io/${{ inputs.image_label }}
+        flavor: |
+          latest=auto
+          prefix=
+          suffix=${{ inputs.tag_suffix }}
+        tags: |
+          type=ref,event=pr
+          type=ref,event=branch
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=semver,pattern={{major}}
+    - name: Build and Push Container
+      uses: docker/build-push-action@v6
+      with:
+        context: .
+        file: ${{ inputs.dockerfile_path }}
+        push: ${{ github.event_name != 'pull_request' }}
+        platforms: linux/amd64,linux/386,linux/arm64,linux/arm/v6,linux/arm/v7
+        tags: ${{ steps.metadata.outputs.tags }}
+        labels: ${{ steps.metadata.outputs.labels }}
+        cache-from: type=registry,ref=ghcr.io/${{ inputs.image_label }}:buildcache${{ inputs.tag_suffix }}
+        cache-to: type=registry,ref=ghcr.io/${{ inputs.image_label }}:buildcache${{ inputs.tag_suffix }},mode=max

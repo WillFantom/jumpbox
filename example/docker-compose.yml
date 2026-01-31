@@ -1,4 +1,4 @@
-version: "3.9"
+name: ssh-jumpbox
 
 services:
   jumpbox:
@@ -33,7 +33,7 @@ services:
 
   fail2ban:
     container_name: jumpbox_fail2ban
-    image: ghcr.io/willfantom/jumpbox-fail2ban:latest
+    image: ghcr.io/willfantom/jumpbox:latest-fail2ban
     restart: unless-stopped
     cap_add:
       - NET_ADMIN

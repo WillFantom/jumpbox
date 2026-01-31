@@ -2,19 +2,34 @@ name: Audit
 
 on:
   workflow_call:
-  push:
+  pull_request:
     branches:
-      - "main"
+      - "*"
     paths:
       - "policy/policy.txt"
+      - "sshd/**"
+      - "build/Dockerfile"
+      - "build/entrypoint.sh"
+  push:
+    branches:
+      - "!main"
+    tags:
+      - "!v*"
+    paths:
+      - "policy/policy.txt"
+      - "sshd/**"
+      - "build/Dockerfile"
+      - "build/entrypoint.sh"
 
 jobs:
   audit:
     name: Audit Server
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup QEMU
         uses: docker/setup-qemu-action@v3
       - name: Setup Docker Buildx
@@ -27,16 +42,17 @@ jobs:
           push: false
           load: true
           tags: jumpbox:policy-test
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
       - name: Run Test Container
         run: |
           docker run --rm -d -e SSHD_PORT=2222 -p 2222:2222 --name jumpbox jumpbox:policy-test && sleep 10
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
-          python-version: "3.11"
+          python-version: "3.13"
+          cache: "pip"
+      - name: Install requirements
+        run: |
+          pip install -r requirements.txt
       - name: Check Against Policy
         run: |
-          pip install ssh-audit
           ssh-audit -P policy/policy.txt 127.0.0.1:2222

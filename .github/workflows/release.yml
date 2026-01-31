@@ -1,98 +1,45 @@
-name: Release Jumpbox
+name: Jumpbox Release
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: "0 2 1 * *"
   push:
     branches:
       - "main"
     tags:
       - "v*"
-    paths-ignore:
-      - "README.md"
-      - "example/**"
-      - "policy/**"
 
 jobs:
-  validate-json:
-    name: Validate Auth JSON
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Validate JSON
-        run: jq . keys/auth.json > /dev/null
-  validate-users:
-    name: Validate Users
-    needs: validate-json
-    runs-on: ubuntu-latest
-    env:
-      Regex: ^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Validate Users
-        run: |
-          jq -r -c '.users[]?.username?' keys/auth.json | while read u; do
-            if [[ ! $u =~ ${Regex} ]]; then
-              echo "Username '"$u"' is not valid"
-              exit 1
-            fi
-          done
+  validate:
+    uses: ./.github/workflows/validate.yml
   audit:
     uses: ./.github/workflows/audit.yml
+  release-jumpbox:
+    name: Jumpbox Docker Release
     needs:
-      - validate-json
-      - validate-users
-  docker-release:
-    name: Docker Release
-    needs:
-      - validate-json
-      - validate-users
+      - validate
       - audit
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
+      - name: Release Jumpbox Docker Image
+        uses: ./.github/actions/release-docker.yml
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Container Metadata
-        id: metadata
-        uses: docker/metadata-action@v5
+          image_label: "${{ github.repository }}"
+          dockerfile_path: "build/Dockerfile"
+  release-fail2ban:
+    name: Fail2Ban Docker Release
+    needs:
+      - validate
+      - audit
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Release Fail2Ban Docker Image
+        uses: ./.github/actions/release-docker.yml
         with:
-          images: |
-            ghcr.io/${{ github.repository_owner }}/jumpbox
-          flavor: |
-            latest=auto
-            prefix=
-            suffix=
-          tags: |
-            type=raw,value=latest-unstable,enable={{is_default_branch}}
-            type=ref,event=branch
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-      - name: Repository Owner to Lowercase
-        id: lowercase-repo-owner
-        run: |
-          echo "::set-output name=owner_lower::${GITHUB_REPOSITORY_OWNER,,}"
-      - name: Build and Push Container
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: build/Dockerfile
-          push: true
-          platforms: linux/amd64,linux/386,linux/arm64,linux/arm/v6,linux/arm/v7
-          tags: ${{ steps.metadata.outputs.tags }}
-          labels: ${{ steps.metadata.outputs.labels }}
-          cache-from: type=registry,ref=ghcr.io/${{ steps.lowercase-repo-owner.outputs.owner_lower }}/jumpbox:buildcache
-          cache-to: type=registry,ref=ghcr.io/${{ steps.lowercase-repo-owner.outputs.owner_lower }}/jumpbox:buildcache,mode=max
+          image_label: "${{ github.repository }}"
+          dockerfile_path: "build/fail2ban.Dockerfile"
+          tag_suffix: "-fail2ban"
